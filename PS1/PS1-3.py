@@ -1,6 +1,9 @@
 import numpy as np 
 import matplotlib.pyplot as plt
 import scipy
+
+
+
 #I stole jon's code for the rational finction
 def rat_eval(p,q,x):
     top=0
@@ -19,53 +22,53 @@ def rat_fit(x,y,n,m):
         mat[:,i]=x**i
     for i in range(1,m):
         mat[:,i-1+n]=-y*x**i
-    pars=np.dot(np.linalg.inv(mat),y)
+    pars=np.dot(np.linalg.pinv(mat),y)
     p=pars[:n]
     q=pars[n:]
     return p,q
 
-n=4
-m=5
 
 
 
+#Time to define our voltage lookup function complete with errors
+def lakeshoreLookup(V):
+    #Load the data
+    data = np.loadtxt('lakeshore.txt')
+    data = np.transpose(data)
 
+    #seperate it into xs and ys
+    xs = data[1]
+    ys = data[0]
 
-#Load the data
 data = np.loadtxt('lakeshore.txt')
 data = np.transpose(data)
 
-#xs and ys
+#seperate it into xs and ys
 xs = data[1]
 ys = data[0]
-print(len(xs))
-#Polyfit
 
 xs = np.flip(xs); ys = np.flip(ys)
+#Polyfit
+'''
+
+
 fit = np.polyfit(xs, ys, 10)
 pred = np.polyval(fit, xs)
 
-
-
 #Cubic Spline
-
 cubicFit = scipy.interpolate.CubicSpline(xs, ys)
-
 print(cubicFit)
-
-
 residuals = ys - pred
 print(np.std(residuals))
 
-
+'''
 #Plotting 
 #=============================
 
 
 
-
-n = 8
-m =7
+n = 6
+m =5
 ratFuncXs = []
 ratFuncYs = []
 x = (np.linspace(0,143,n+m-1))
@@ -78,18 +81,11 @@ p,q = rat_fit(ratFuncXs, ratFuncYs, n, m)
 ratPred = rat_eval(p, q, xs)
 
 
-
 plt.plot(xs,ratPred, label = 'RatPred')
 plt.plot(xs,ys)
 plt.legend()
 plt.show()
 
-
-plt.plot(xs,ys, 'o')
-plt.plot(xs,cubicFit(xs))
-plt.plot(xs,pred)
-
-plt.show()
-
 plt.plot(xs,abs(ys - ratPred), '.')
 plt.show()
+
