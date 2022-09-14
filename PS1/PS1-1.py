@@ -15,18 +15,18 @@ def ndiff(fun,x,full):
 
     dx = 1      #Our initial dx
     previousValue = centeredDerivative(fun, x, dx)       #Initialize our previous value
-    dx /= 10
+    dx = dx/10
     newValue = centeredDerivative(fun, x, dx)
     #Now for the error terms
     previousError = abs(newValue - previousValue)
 
     endLoop = False
     while endLoop == False:
-        dx /= 2
+        dx = dx/ 10**(1/8.5)
         previousValue = newValue
         newValue = centeredDerivative(fun, x, dx)
         newError = abs(newValue- previousValue)
-
+        print("this is the dx " , dx)
         if newError > previousError:
             endLoop = True
             print(newError)
@@ -36,9 +36,9 @@ def ndiff(fun,x,full):
         else:
             previousError = newError
 
-
+   
     return
-'''
+
 fun = np.sin
 estDx = ndiff(fun, 1, full = True)
 #now lets check it against log log plot
@@ -76,7 +76,7 @@ plt.loglog(dx,np.abs(d1-derivFun(x0)))
 plt.plot(dx,np.abs(d2-derivFun(x0)))
 
 plt.show()
-'''
+
 
 #Question 3: Lakeshore Diodes
 print(os.getcwd())

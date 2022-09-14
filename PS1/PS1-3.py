@@ -44,10 +44,8 @@ print(len(xs))
 xs = np.flip(xs); ys = np.flip(ys)
 fit = np.polyfit(xs, ys, 10)
 pred = np.polyval(fit, xs)
-'''
-p,q = rat_fit(xs, ys, n, m)
-ratPred = rat_eval(p, q, xs)
-'''
+
+
 
 #Cubic Spline
 
@@ -55,14 +53,43 @@ cubicFit = scipy.interpolate.CubicSpline(xs, ys)
 
 print(cubicFit)
 
+
+residuals = ys - pred
+print(np.std(residuals))
+
+
 #Plotting 
 #=============================
+
+
+
+
+n = 6
+m =5
+ratFuncXs = []
+ratFuncYs = []
+x = (np.linspace(0,143,n+m-1))
+for i in x:
+    ratFuncXs.append(xs[int(i)])
+    ratFuncYs.append(ys[int(i)])
+
+ratFuncXs = np.asarray(ratFuncXs); ratFuncYs =np.asarray(ratFuncYs)
+p,q = rat_fit(ratFuncXs, ratFuncYs, n, m)
+ratPred = rat_eval(p, q, xs)
+
+
+
+plt.plot(xs,ratPred, label = 'RatPred')
+plt.plot(xs,ys)
+plt.legend()
+plt.show()
+
+
 plt.plot(xs,ys, 'o')
 plt.plot(xs,cubicFit(xs))
 plt.plot(xs,pred)
 
 plt.show()
 
-plt.plot(xs,ys - pred, '.')
+plt.plot(xs,ys - ratPred, '.')
 plt.show()
-
