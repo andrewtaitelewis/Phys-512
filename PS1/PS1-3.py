@@ -64,8 +64,8 @@ print(np.std(residuals))
 
 
 
-n = 6
-m =5
+n = 8
+m =7
 ratFuncXs = []
 ratFuncYs = []
 x = (np.linspace(0,143,n+m-1))
@@ -91,5 +91,5 @@ plt.plot(xs,pred)
 
 plt.show()
 
-plt.plot(xs,ys - ratPred, '.')
+plt.plot(xs,abs(ys - ratPred), '.')
 plt.show()

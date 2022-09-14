@@ -3,8 +3,6 @@ import matplotlib.pyplot as plt
 
 def ndiff(fun,x,full):
     #We will make the difference smaller and smaller until we reach the end
-
-
     def centeredDerivative(fun,x,dx):
         return (fun(x + dx) - fun(x - dx))/(2*dx)
 
@@ -17,7 +15,7 @@ def ndiff(fun,x,full):
 
     endLoop = False
     while endLoop == False:
-        dx = dx/ 10**(1/8.5)
+        dx = dx/ 10**(1/9)
         previousValue = newValue
         newValue = centeredDerivative(fun, x, dx)
         newError = abs(newValue- previousValue)
@@ -26,15 +24,20 @@ def ndiff(fun,x,full):
             endLoop = True
             print("This is the previous error ", previousError)
             print(dx)
-            return dx
+            
         
         else:
+            
             previousError = newError
 
-   
+    if full == True:
+        #If full is true we return the derivative,dx and an estimate of error
+        return (centeredDerivative(fun, x, dx),dx,previousError)
+    else:
+        return centeredDerivative(fun, x, dx)
     return
 fun = np.tan
-estDx = ndiff(fun, 1, full = True)
+derivValue,estDx,prevError = ndiff(fun, 1, full = True)
 #now lets check it against log log plot
 logdx=np.linspace(-15,-1,1001)
 dx=10**logdx
