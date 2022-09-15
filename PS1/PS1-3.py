@@ -39,7 +39,70 @@ def lakeshoreLookup(V):
     #seperate it into xs and ys
     xs = data[1]
     ys = data[0]
+    xs = np.flip(xs); ys = np.flip(ys)
+    #I am going to use a rational function to fit the dataset
+    #I stole the code from Jon 
+    n = 6
+    m =5
+    ratFuncXs = []
+    ratFuncYs = []
+    x = (np.linspace(0,143,n+m-1))
+    for i in x:
+        ratFuncXs.append(xs[int(i)])
+        ratFuncYs.append(ys[int(i)])
 
+    ratFuncXs = np.asarray(ratFuncXs); ratFuncYs =np.asarray(ratFuncYs)
+    p,q = rat_fit(ratFuncXs, ratFuncYs, n, m)
+    ratPred = rat_eval(p, q, xs)
+    #Now time to do some function evaluation
+    isList = isinstance(V, list)  #Check if the thing is a list
+
+    if isList:
+        estimateArray = []      #Array of our estimates
+        errorArray = []         #Array of the error
+        for i in V:
+            estimateArray.append(rat_eval(p,q,i))
+            
+            #now for the error
+            for j in range(len(xs)):
+                if i > xs[j]:
+                    print(i)
+                    continue
+                else:
+                    if j == len(xs)-1:        #If we're at the last index
+                        errorArray.append(abs(ys[j] - rat_eval(p,q,xs[j])))
+                        break
+                    else:
+
+                        errorArray.append(abs(ys[j-1] - rat_eval(p,q,xs[j-1]))/2.0+abs(ys[j] - rat_eval(p,q,xs[j]))/2)     #Return the average and force the float
+                        break
+        return estimateArray,errorArray
+    else:
+       
+        estimate = rat_eval(p,q,V)
+        for j in range(len(xs)):
+            print(V > xs[j])
+            if V > xs[j]:
+                continue
+            else:
+                if j == len(xs)-1:        #If we're at the last index
+                    error = (abs(ys[j] - rat_eval(p,q,xs[j])))
+                    
+                    break
+                else:
+                    error= (abs(ys[j-1] - rat_eval(p,q,xs[j-1]))/2.0+abs(ys[j] - rat_eval(p,q,xs[j]))/2) #Return the average and force the float
+                    break
+                    
+    return estimate,error
+
+print(lakeshoreLookup([.4,.5,.6,.1]))
+
+
+                
+
+
+
+    #I am going to define the error as the average of the error in the two neighboring points
 data = np.loadtxt('lakeshore.txt')
 data = np.transpose(data)
 
@@ -86,6 +149,6 @@ plt.plot(xs,ys)
 plt.legend()
 plt.show()
 
-plt.plot(xs,abs(ys - ratPred), '.')
+plt.plot(xs,(ys - ratPred), '.')
 plt.show()
 
