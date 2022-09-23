@@ -6,7 +6,6 @@ import scipy
 
 #Our adaptive integrator 
 def integrate_adaptive(fun,a,b,tol,extra):
-   
 
     #So we can carry forward a lot of our terms
     if extra is None:
@@ -55,6 +54,7 @@ def integrate_adaptive(fun,a,b,tol,extra):
         
 #Question 1- The spherical shell
 
+#Our integrand
 def ezIntegrand(z,R,x,sigma):
     #Our integrand for the spherical shell problem
     top = np.sin(x)*(z-R*np.cos(x))
@@ -65,7 +65,7 @@ def ezIntegrand(z,R,x,sigma):
 
 #Main
 #Now i'm sure there is a more clever way to do this but because I am not exactly clever I am using lambda functions
-
+#======================================
 z = np.linspace(0, 2,21)
 sigma = 1
 R = 1
@@ -85,6 +85,7 @@ for i in z:
     }
 
 print(valueArray)
+plt.title("Electrical Field of a Spherical Shell of Radius R vs. Z coordinate")
 
 plt.axvline(R,label = 'R Value', color = 'red', alpha = 0.5)
 plt.plot(z,valueArray,'.',label = 'My Integrator')
@@ -94,6 +95,6 @@ plt.xlabel('Z Value')
 plt.legend()
 
 plt.ylabel('$E_z$ in units of $1 /\epsilon_0$')
+plt.savefig('PS1Fig1.png')
 #Now for scipy's integrator
 
-plt.show()
