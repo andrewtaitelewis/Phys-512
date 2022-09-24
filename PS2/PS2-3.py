@@ -21,8 +21,7 @@ print(v)
 
 
 
-print(abs(v)<(10e-6))
-
+'''
 print(rescaling(x))
 plt.title("$Log_2$ vs the Chebyshev polynomial fit.")
 plt.plot(x,y,label = 'actual')
@@ -33,18 +32,17 @@ plt.legend()
 plt.show()
 plt.savefig('PS2P3Fig1.png')
 plt.clf()
-
+'''
 #Now time for residuals
+'''
 plt.title("$MyLog_2$ Residuals.")
 plt.plot(x,y-np.polynomial.chebyshev.chebval(rescaling(x), v),'.')
-
 plt.xlabel('x')
 plt.ylabel('y')
 plt.legend()
-
 plt.savefig('PS2P3Fig1Resid.png')
 plt.clf()
-plt.show()
+'''
 
 
 def mylog2(x, chebychevFit):
@@ -58,9 +56,30 @@ def mylog2(x, chebychevFit):
     #Using the change of basis for a logarithm
     return (np.polynomial.chebyshev.chebval(rescaling(mantissa), chebychevFit) + exponent)/(np.polynomial.chebyshev.chebval(rescaling(mantissa2), chebychevFit) + exponent2)
 
+legendreFit = np.polynomial.legendre.legfit(newXs, y, 8)
+
+#Testing out newLog2
+x = np.linspace(1,10000,100)
+y = np.log(x)
+newYs = mylog2(x, v)
+
+plt.plot(x,y, label = 'Actual values for ln(x)')
+plt.plot(x,newYs, label = 'MyLog2 calculated Values')
+plt.title('Compariason between natural log and mylog2')
+plt.xlabel('x')
+plt.ylabel('y')
+plt.legend()
+plt.show()
+
+#And now for the residuals
+plt.plot(x,y-newYs, '.',label = 'Residuals Y- MyLog2')
+plt.title('Residuals between myLog2 fit and actual natural log'); plt.xlabel('x');plt.ylabel('y')
+plt.legend()
+plt.show()
+
 
 #Repeating the exercise with the legendre polynomial
-legendreFit = np.polynomial.legendre.legfit(newXs, y, 8)
+
 
 def myLegendreLog2(x,legendreFit):
     def rescaling(x):
@@ -69,12 +88,5 @@ def myLegendreLog2(x,legendreFit):
     mantissa, exponent = np.frexp(x)
     mantissa2,exponent2 = np.frexp(np.e)
     return (np.polynomial.legendre.legval(rescaling(mantissa),legendreFit) + exponent)/(np.polynomial.legendre.legval(rescaling(mantissa2), legendreFit) + exponent2)
-plt.clf()
-
-plt.plot(x,y-np.polynomial.legendre.legval(rescaling(x), legendreFit),'.')
-plt.show()
-print(max(abs(y-np.polynomial.legendre.legval(rescaling(x), legendreFit))))
-print(max(abs(y-np.polynomial.chebyshev.chebval(rescaling(x), v))))
-
 
 
