@@ -85,6 +85,7 @@ for i in z:
     }
 
 print(valueArray)
+'''
 plt.title("Electrical Field of a Spherical Shell of Radius R vs. Z coordinate")
 
 plt.axvline(R,label = 'R Value', color = 'red', alpha = 0.5)
@@ -93,7 +94,7 @@ plt.plot(z,scipyValue,'.', label = 'Scipy.Integrate.Quad')
 plt.xlabel('Z Value')
 
 plt.legend()
-
+'''
 plt.ylabel('$E_z$ in units of $1 /\epsilon_0$')
 plt.savefig('PS1Fig1.png')
 #Now for scipy's integrator

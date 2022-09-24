@@ -63,6 +63,7 @@ x = np.linspace(1,10000,100)
 y = np.log(x)
 newYs = mylog2(x, v)
 
+'''
 plt.plot(x,y, label = 'Actual values for ln(x)')
 plt.plot(x,newYs, label = 'MyLog2 calculated Values')
 plt.title('Compariason between natural log and mylog2')
@@ -76,7 +77,7 @@ plt.plot(x,y-newYs, '.',label = 'Residuals Y- MyLog2')
 plt.title('Residuals between myLog2 fit and actual natural log'); plt.xlabel('x');plt.ylabel('y')
 plt.legend()
 plt.show()
-
+'''
 
 #Repeating the exercise with the legendre polynomial
 
