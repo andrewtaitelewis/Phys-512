@@ -1,0 +1,44 @@
+#Importing our modules
+import numpy as np 
+import matplotlib.pyplot as plt
+
+def rk4(fun,x,y,h):
+    k1=fun(x,y)*h
+    k2=h*fun(x+h/2,y+k1/2)
+    k3=h*fun(x+h/2,y+k2/2)
+    k4=h*fun(x+h,y+k3)
+    dy=(k1+2*k2+2*k3+k4)/6
+    return y+dy
+
+
+
+def rk4_stepd(fun,x,y,h):
+
+
+    pass
+
+x = np.linspace(-20,20,201)
+y = 1
+
+
+def fun(x,y):
+    return y/(1+x**2)
+
+y = rk4(fun,-20,1,abs(x[1] - x[0]))
+
+actualFun = lambda x,c0 : c0*np.exp(np.arctan(x))
+
+prevY = 1
+y = []
+for i in x: 
+    y.append(prevY)
+    newY = (rk4(fun,i,prevY,abs(x[1] - x[0])))
+    
+    prevY = newY
+
+plt.plot(x,y)
+plt.plot(x,actualFun(x,4.576))
+plt.show()
+
+plt.plot(x,y -actualFun(x,4.576), '.')
+plt.show()

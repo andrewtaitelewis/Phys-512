@@ -1,0 +1,47 @@
+#Importing our modules
+import numpy as np 
+import matplotlib.pyplot as plt 
+import scipy
+
+#Our decay chain
+
+halfLives = [4.468e9,24.10/365.0,6.7, 0.00076484, 245500,75380,1600,3.8235/365.0,5.898e-6,5.09893e-5,3.78615e-5,5.209919e-12,22.3,5.015,138.376/365]
+#halfLives = [1,1e-5]
+def fun(x,y,half_lifes = halfLives):
+    dydx = np.zeros(len(half_lifes) + 1)
+    
+  
+    for i in range(len(half_lifes)):
+        
+        #If we are on the first half life
+        if i ==0:
+            dydx[i] = -y[i]/half_lifes[i]
+            continue
+        #If we are on the last half life
+        if i == len(half_lifes) -1: 
+            dydx[i] = y[i-1]/half_lifes[i-1] - y[i]/half_lifes[i]
+            dydx[i+1] = y[i]/half_lifes[i]
+            continue
+        else:
+            dydx[i] = y[i-1]/half_lifes[i-1] - y[i]/half_lifes[i]
+        
+
+
+        
+
+    return dydx
+
+
+
+
+y0 = np.zeros(len(halfLives) +1)
+y0[0] = 1
+x0 = 0
+x1 = 1e10
+
+ans_stiff = scipy.integrate.solve_ivp(fun,[x0,x1], y0, method= 
+'Radau')
+
+plt.plot(ans_stiff.t,ans_stiff.y[-1,:])
+plt.show()
+
