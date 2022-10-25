@@ -33,12 +33,14 @@ def get_spectrum(pars,lmax=3000):
 #=================================================================================
 parameterErrors = [6.85181170e-01,2.34194962e-04,1.29042349e-03,9.87278676e-03,
  3.65878404e-11,4.13384564e-03]
-parameterErrors = np.asarray(parameterErrors)*(1/12)
+parameterErrors = np.asarray(parameterErrors)*(1/13)
 
 #Initial Guess
-p = [68.36686186764452, 0.022280528065082024, 0.11693354622675735, 0.008108996022793497, 1.901444813349336e-09, 0.9700293461245831]
-nstep = 20000
+#p = [68.36686186764452, 0.022280528065082024, 0.11693354622675735, 0.008108996022793497, 1.901444813349336e-09, 0.9700293461245831]
+p = [68.41228632763885, 0.022251538532290387, 0.11692277833584355, 0.08236356993935424, 2.2005292587670352e-09, 0.9753649323011608]
+nstep = 30000
 T = 1
+fileName = '25_10_2022_mcmc.txt'       #Name of the file we are saving
 #Loading the data
 #=================================================================================
 planck=np.loadtxt('COM_PowerSpect_CMB-TT-full_R3.01.txt',skiprows=1)
@@ -118,6 +120,6 @@ toSave = np.empty([nstep,len(p)+1])
 toSave[:,0] = chisqList
 toSave[:,1:] = chain 
 
-np.savetxt('mcmc.txt', toSave)
+np.savetxt(fileName, toSave)
 #Doing step one
 
