@@ -7,11 +7,13 @@ from helper import centeredDerivative
 from helper import parameterDifferentiator
 
 def chiSquare(obs,exp):
-    return np.sum(((obs -exp)**2)/exp)
+    return np.sum(((obs -exp)**2))
 
 def chisq_fun(p,t,y):
-    pred = multiLorentz(t, p)
-    return np.sum(((pred-y)**2)/y)
+    d = multiLorentz(t, p)
+    return np.sum(((d-y)**2))
+
+
 def multiLorentz(t,p):
     #unpacking our parameters
     a,b,c,t0,w,dt = p
@@ -81,7 +83,7 @@ plt.savefig('1a.png')
 #Part b
 #This is how we are going to define our error- Assuming gaussian errors
 noiseEst = np.std(dTrue - d)
-
+noiseEst = 0.0053
 placeHolder = A.T*(1/noiseEst**2)@A
 
 print(np.diag(np.linalg.inv(placeHolder)**(1/2)))
@@ -148,7 +150,7 @@ print(p)
 #==================================================
 p = [1.4429920621045567,0.06473185228998703,0.1039102997403473,0.0001925785145156235,1.6065128537024153e-05,-4.456728541127008e-05]
 A = np.empty([len(t),len(p)])
-for iter in range(5):
+for iter in range(1):
     print('Iteration', iter)
   
 
@@ -178,12 +180,11 @@ for iter in range(5):
 #Full covariance matix
 
 d = multiLorentz(t, p)
-noiseEst = np.std(dTrue - d)
-print('noiseest',1/noiseEst**2)
-newA = A * 1/noiseEst**2
-placeHolder = newA.T@A
 
-errors = np.diag(np.linalg.pinv(placeHolder)**(1/2))
+
+placeHolder = A.T * 1/(0.0053**2)@A
+
+errors = np.sqrt(np.diag(np.linalg.inv(placeHolder)))
 
 #Plot of our triple lorentzian
 plt.clf()
@@ -215,7 +216,7 @@ print('\n')
 print('Optimal parameters')
 print(chiSquare(dTrue,multiLorentz(t, p)))
 
-errors = np.asarray(errors)
+
 p = np.asarray(p)
 print('Shifted')
 print(chiSquare(dTrue,multiLorentz(t, p+errors)))
@@ -237,18 +238,55 @@ plt.clf()
 
 print('Section G')
 
-nstep = 10000
+nstep = 100000
 chain = np.zeros([nstep, len(p)])
-chisq = chisq_fun(p, t, dTrue)
+
+#Monte Carlo markov chain
+#Step -1 choose a sample distribution- Normal distribution
+#np.random.randn()*0.01
+initalP = p+1e3*errors
+#Our initial spot
+chain[0] = initalP      #add it to the chain
+chisq= chisq_fun(chain[0], t, dTrue)      
+
+for i in range(1,nstep):
+    if i%1000 == 0:
+        print(i)
+    step = chain[i-1]+np.random.randn(6)*errors  #our new step
+
+    #Our new chisq
+    chisqNew = chisq_fun(step, t, dTrue)
+
+
+    #Okay now we'll try the old way
+    accept = np.exp(-0.5*(chisqNew-chisq))
+    if accept > np.random.rand():
+        chain[i] = step
+        chisq = chisqNew
+        continue
+    else:
+        chain[i] = chain[i-1]
+        continue
+
+
+
+#choose a random number 
+
+
+
+
+
+'''
 chain[0] = p
 print('starting mcmc')
 for i in range(1,nstep):
     if i%1000 == 0:
         print(i)
+        print(accept)
     #take trial step
-    pp = chain[i-1,:] + 1.0*np.random.randn(len(errors))*errors*10
+    pp = chain[i-1,:] + np.random.randn(len(errors))*errors
     chisqNew = chisq_fun(pp, t, dTrue)
-    accept = np.exp(-0.5*(chisqNew-chisq))
+    accept = np.exp(-0.5*(chisq - chisqNew))
     
     if accept > np.random.rand(1):
         chisq = chisqNew
@@ -256,13 +294,13 @@ for i in range(1,nstep):
     else:
         chain[i,:] = chain[i-1,:]
 
-
+'''
 
 print(chisq)
 plt.title('Markov Chain')
 plt.xlabel('Steps')
 plt.ylabel('Value of a')
-plt.plot(chain[:,2],'.')
+plt.plot(chain[:,0])
 plt.savefig('1g.png')
 plt.clf()
 '''
@@ -282,9 +320,10 @@ chain = chain.T
 p = []
 errors = []
 for i in range(6):
-    p.append(np.mean(chain[i,:]))
-    errors.append(np.std(chain[i,:]))
+    p.append(np.mean(chain[i,-1]))
+    errors.append(np.std(chain[i,-1]))
    
+p = chain[:,-1]
 print('p', p)
 print('error', errors)
 plt.plot(t,dTrue,label ='Actual Data')

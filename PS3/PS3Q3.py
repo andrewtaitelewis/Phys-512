@@ -9,11 +9,11 @@ data = data.T
 #print(data)
 
 ax = plt.axes(projection = '3d')
-'''
+
 ax.scatter3D(data[0],data[1],data[2])
 plt.show()
 
-'''
+
 #We have to form our matricies
 b = np.zeros([2,2])
 b[0][0] = 1
@@ -84,6 +84,14 @@ noise = np.asmatrix(noise)
 N = (noise.T@noise)
 
 
+ax = plt.axes(projection = '3d')
+ax.scatter3D(x,y,z - zs)
+plt.xlabel('x')
+plt.ylabel('y')
+
+plt.title('Residuals between the model and the data')
+plt.savefig('residuals.png')
+plt.show()
 
 N = np.asarray(N)
 
