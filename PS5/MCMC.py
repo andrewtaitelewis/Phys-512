@@ -31,13 +31,13 @@ def get_spectrum(pars,lmax=3000):
 
 #Settings
 #=================================================================================
-parameterErrors = [6.85181170e-01,2.34194962e-04,1.29042349e-03,9.87278676e-03,
+parameterErrors = [6.85181170e-01,2.34194962e-04,1.29042349e-03,9.87278676e-05,
  3.65878404e-11,4.13384564e-03]
 parameterErrors = np.asarray(parameterErrors)*(1/12)
 
 #Initial Guess
 p = [68.36686186764452, 0.022280528065082024, 0.11693354622675735, 0.008108996022793497, 1.901444813349336e-09, 0.9700293461245831]
-nstep = 20000
+nstep = 30000
 T = 1
 #Loading the data
 #=================================================================================
@@ -118,6 +118,6 @@ toSave = np.empty([nstep,len(p)+1])
 toSave[:,0] = chisqList
 toSave[:,1:] = chain 
 
-np.savetxt('mcmc.txt', toSave)
+np.savetxt('mcmc_30000_T2.txt', toSave)
 #Doing step one
 
