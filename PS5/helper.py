@@ -142,9 +142,9 @@ def customNewtonSolverNoDarkMatter(iterations,pInit,data,errors):
         p = np.asarray(p)[0]
 
         #For scaling down the dark matter
-        if iter % 2 == 0:
-            oldP = oldP*.1     #Scale down the old P
-            print('Dark matter scaled down to:', oldP)
+        if iter % 3 == 0:
+           oldP = oldP*.1     #Scale down the old P
+           print('Dark matter scaled down to:', oldP)
         
         
         p = list(p)
