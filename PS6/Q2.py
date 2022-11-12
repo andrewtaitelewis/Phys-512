@@ -71,6 +71,7 @@ if __name__ == "__main__":
     plt.plot(correlation, label = 'Correlation Signal')
     plt.title("Correlation of a Gaussian with a Shifted Version of Itself by: " + str(shift))
     plt.xlabel('x')
+    plt.axvline(N- shift, label = 'N- shift', color = 'r')
     plt.ylabel('y')
     plt.legend()
     plt.savefig('Q2b.png')

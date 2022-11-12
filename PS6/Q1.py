@@ -25,12 +25,12 @@ def convolutionShifter(array,amountToShift):
     shifterArray[amountToShift%lenArray] = 1     #Assigning where to shift, % sign is to avoid an error, arbitrary shift!
 
     #FFTs and Convolution
-    arrayFft = np.fft.rfft(array)
-    shiftFft = np.fft.rfft(shifterArray)
+    arrayFft = np.fft.fft(array)
+    shiftFft = np.fft.fft(shifterArray)
 
     returnedArrayFft = arrayFft*shiftFft        #Our convolution in fourier space
     print(len(returnedArrayFft))
-    returnedArray = np.fft.irfft(returnedArrayFft)        #Undoing the fourier transform
+    returnedArray = np.fft.ifft(returnedArrayFft)        #Undoing the fourier transform
 
     return returnedArray
 
