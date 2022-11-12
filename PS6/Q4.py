@@ -8,10 +8,10 @@ m = 3.5
 N = int(100)
 def analyticalSolution(k,m,N):
 
-    firstTerm = (1 - np.exp(2*np.pi * (1J)*(m-k)))/(1 - np.exp(2*np.pi * (1J)*(m-k)/N))
-    secondTerm = (1 - np.exp(-2*np.pi * (1J)*(m+k)))/(1 - np.exp(-2*np.pi * (1J)*(m+k)/N))
+    firstTerm = (1 - np.exp(2*np.pi * (1J)*(m-k)))/(1 - np.exp((2*np.pi * (1J)*(m-k))/N))
+    secondTerm = (1 - np.exp(-2*np.pi * (1J)*(m+k)))/(1 - np.exp((-2*np.pi * (1J)*(m+k))/N))
 
-    return (firstTerm-secondTerm)*(1/2j)
+    return (firstTerm-secondTerm)*(1/(2J))
 
 
 def windowFunction(x,N):
