@@ -5,13 +5,19 @@ import matplotlib.pyplot as plt
 #Some Constants
 #======
 m = 3.5
-N = int(100)
+N = int(10000)
+
+def geometricSeries(k,N):
+    top = 1 - np.exp(-2*np.pi *1J *k)
+    bottom = 1 - np.exp(-2*np.pi *1J *k/N)
+    return top/bottom
 def analyticalSolution(k,m,N):
+    k1 = k + N*m/(-2*np.pi)
+    firstTerm = geometricSeries(k1, N)
+    k2 = k + N*m/(2*np.pi)
+    secondTerm = geometricSeries(k2, N)
 
-    firstTerm = (1 - np.exp(2*np.pi * (1J)*(m-k)))/(1 - np.exp((2*np.pi * (1J)*(m-k))/N))
-    secondTerm = (1 - np.exp(-2*np.pi * (1J)*(m+k)))/(1 - np.exp((-2*np.pi * (1J)*(m+k))/N))
-
-    return (firstTerm-secondTerm)*(1/(2J))
+    return (firstTerm-secondTerm)*(1/2J)
 
 
 def windowFunction(x,N):
@@ -26,15 +32,17 @@ def sineFunc(m,N,xs):
 
 #Getting our xs and ys sorted out
 xs  = np.linspace(0, N,N+1)
-ys = np.sin(2*np.pi*m/N*xs)
+ys = np.sin(m*xs)
 
 kValues = []
 
 for i in xs: 
-    kValues.append(abs(analyticalSolution(i, m, N)))
-normalFFT = (np.fft.fft(ys))
+    kValues.append((analyticalSolution(i, m, N)))
+    
+normalFFT = ((np.fft.fft(ys)))
 
-plt.plot(abs(normalFFT),'.',label = 'FFT')
+
+plt.plot((normalFFT),'.',label = 'FFT')
 plt.plot((kValues),'.', label = 'DFT')
 
 plt.xlabel('k')
@@ -42,8 +50,11 @@ plt.ylabel('Magnitude of the Fourier Transform')
 plt.legend()
 plt.title('Compariason of Analytical DFT and FFT')
 plt.savefig('Q4c.png')
-plt.show()
 
+
+plt.clf()
+plt.plot(normalFFT-kValues)
+plt.show()
 #Fourier Transform after window function
 
 afterWindow = ys*windowFunction(xs, N)
