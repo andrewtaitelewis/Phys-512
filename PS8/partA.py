@@ -25,18 +25,18 @@ for i in range(gridsize+1):
 
 
 
-#Stolen from class
-def average(V):
+#Stolen from class notets
+def neighborsFunc(V):
     return (np.roll(V,1,0) + np.roll(V,-1,0) + np.roll(V,1,1) + np.roll(V,-1,1)) / 4
-def compute_rho(V):
-    return V - average(V)
+def rhoFunc(V):
+    return V - neighborsFunc(V)
     
-rho = compute_rho(V)
+rho = rhoFunc(V)
 
 # Rescale V to rho[0,0] = V[0,0] = 1
 V = V/rho[mid,mid]
 V = V - V[mid,mid] + 1
-rho = compute_rho(V)
+rho = rhoFunc(V)
 
 # Print values
 
@@ -47,17 +47,17 @@ print("V[1,0]:", V[mid+1,mid])
 print("V[2,0]:", V[mid+2,mid])
 print("V[5,0]:", V[mid+5,mid])
 #Relaxing
-iter = 1000
+iter = 10000
 for t in range(iter):
     #Compute everything except for the center
     #But we can't compute the center directly
-    neighbors = average(V)
+    neighbors = neighborsFunc(V)
     V = neighbors
 
     # Compute V[0, 0]
     V[mid,mid] = 4 * V[mid+1,mid] - V[mid+2,mid] - V[mid+1,mid+1] - V[mid+1,mid-1]
 
-    rho = compute_rho(V)
+    rho = rhoFunc(V)
     
     V = V/rho[mid,mid]
     V = V -V[mid,mid] +1
@@ -70,5 +70,5 @@ print("V[5,0]:", V[mid+5,mid])
 
 
 np.savetxt('1dCharge200.txt', V)
-plt.imshow(V)
+plt.imshow(rho)
 plt.show()
