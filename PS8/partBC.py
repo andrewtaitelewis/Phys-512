@@ -13,7 +13,7 @@ def potentialCalc(rho,chargeFT,mask):
     return np.real(potential)       #Return only the real parts
 
 
-#Our conjugate gradient solver, if it looks familiar it is because I stole Jon's code
+#Our conjugate gradient solver, if it looks familiar it is because I adapted Jon's code
 def conjGrad(vTarget,mask,chargeFT,rho = None,iterations=50):
     if rho is None:
         rho = 0*vTarget
